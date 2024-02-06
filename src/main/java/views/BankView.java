@@ -45,13 +45,7 @@ public class BankView {
         return input.nextInt();
     }
 
-    private static void printUsers() {
-        System.out.println(fileHandler.getUsernames());
-    }
-
-    private static void createUser() {
-        Scanner input = new Scanner(System.in);
-
+    public User getUser() {
         System.out.println("Enter id for user: ");
         int id = input.nextInt();
 
@@ -61,16 +55,14 @@ public class BankView {
         System.out.println("Is this correct? Id: " + id + " models.User: " + name + " Y/N");
         String choice = input.next().toLowerCase();
 
-        switch (choice) {
-            case "y":
-                User user = new User();
-                user.setUserId(id);
-                user.setUserName(name);
-                fileHandler.addUser(user);
-                break;
-            case "n":
-                break;
+        User user = new User();
+        user.setUserId(id);
+        user.setUserName(name);
+
+        if (choice.equals("y")) {
+            return user;
         }
+        return null;
     }
 
 //    private static void personalMenu() {

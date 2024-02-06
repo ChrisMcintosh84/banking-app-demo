@@ -42,7 +42,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "models.User{" +
+        return "User{" +
                 "userId=" + userId +
                 ", userName='" + userName + '\'' +
                 ", userAccounts=" + Arrays.toString(userAccounts) +

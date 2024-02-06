@@ -1,15 +1,18 @@
 package controllers;
 
 import models.Transaction;
+import models.User;
 import views.BankView;
 
 public class BankController {
     private Transaction transaction;
     private BankView view;
+    private FileHandler fileHandler;
 
-    public BankController(Transaction transaction, BankView view) {
+    public BankController(Transaction transaction, BankView view, FileHandler fileHandler) {
         this.transaction = transaction;
         this.view = view;
+        this.fileHandler = fileHandler;
     }
 
     public void init() {
@@ -41,10 +44,10 @@ public class BankController {
                     processAccountMenuInput();
                     break;
                 case 2:
-                    System.out.println("user created");
+                    processNewUser();
                     break;
                 case 3:
-                    System.out.println("list of users");
+                    printUsers();
                     break;
                 case 4:
                     processMainMenuInput();
@@ -78,4 +81,13 @@ public class BankController {
         }
     }
 
+    private void printUsers() {
+        System.out.println(fileHandler.getUsernames());
+    }
+
+    private void processNewUser() {
+        User user = view.getUser();
+
+        fileHandler.addUser(user);
+    }
 }
