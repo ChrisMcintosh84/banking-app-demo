@@ -82,15 +82,17 @@ public class BankController {
 
         List<BankAccount> accounts = fileHandler.getAccountList();
 
-        for (BankAccount account: accounts) {
-            if ((account.getAccountNumber().equals(bankAccount.getAccountNumber()))) {
-                account.deposit(bankAccount.getBalance());
-                fileHandler.updateAccounts(accounts);
-                break;
-            }
-            else {
-                System.out.println("Account number doesn't exist");
-            }
+        BankAccount account = accounts.stream()
+                .filter(predicateAccount -> bankAccount.getAccountNumber().equals(predicateAccount.getAccountNumber()))
+                .findAny()
+                .orElse(null);
+
+        if (account != null) {
+            account.deposit(bankAccount.getBalance());
+            fileHandler.updateAccounts(accounts);
+        }
+        else {
+            System.out.println("Account number doesn't exist");
         }
     }
 
@@ -99,15 +101,17 @@ public class BankController {
 
         List<BankAccount> accounts = fileHandler.getAccountList();
 
-        for (BankAccount account: accounts) {
-            if ((account.getAccountNumber().equals(bankAccount.getAccountNumber()))) {
-                account.withdraw(bankAccount.getBalance());
-                fileHandler.addAccount(account);
-                break;
-            }
-            else {
-                System.out.println("Account number doesn't exist");
-            }
+        BankAccount account = accounts.stream()
+                .filter(predicateAccount -> bankAccount.getAccountNumber().equals(predicateAccount.getAccountNumber()))
+                .findAny()
+                .orElse(null);
+
+        if (account != null) {
+            account.withdraw(bankAccount.getBalance());
+            fileHandler.updateAccounts(accounts);
+        }
+        else {
+            System.out.println("Account number doesn't exist");
         }
     }
 
@@ -124,22 +128,19 @@ public class BankController {
     private void processDeleteAccount() {
         String accountNumber = view.getAccountToDelete();
         List<BankAccount> accounts = fileHandler.getAccountList();
-        BankAccount tempAccount = null;
 
-        for (BankAccount bankAccount: accounts) {
-            if (bankAccount.getAccountNumber().equals(accountNumber)) {
-                tempAccount = bankAccount;
-                break;
-            }
-            else {
-                System.out.println("No such account exists");
-            }
-        }
+        BankAccount account = accounts.stream()
+                .filter(predicateAccount -> accountNumber.equals(predicateAccount.getAccountNumber()))
+                .findAny()
+                .orElse(null);
 
-        if (!(tempAccount == null)) {
+        if (account != null) {
             System.out.println("deleted...");
-            accounts.remove(tempAccount);
+            accounts.remove(account);
             fileHandler.updateAccounts(accounts);
+        }
+        else {
+            System.out.println("Account number doesn't exist");
         }
     }
 }
