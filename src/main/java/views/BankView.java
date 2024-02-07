@@ -74,4 +74,17 @@ public class BankView {
         }
         return null;
     }
+
+    public String getAccountToDelete() {
+        System.out.println("Enter account number to delete: ");
+        String accountNumber = input.next();
+
+        System.out.println("Is this correct? Account number: " + accountNumber + " (Y/N)");
+        String choice = input.next().toLowerCase();
+
+        if (choice.equals("y")) {
+            return accountNumber;
+        }
+        return null;
+    }
 }

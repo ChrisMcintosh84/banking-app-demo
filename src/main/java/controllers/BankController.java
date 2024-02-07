@@ -4,7 +4,6 @@ import models.BankAccount;
 import views.BankView;
 
 import java.util.List;
-import java.util.Objects;
 
 public class BankController {
     private BankView view;
@@ -50,7 +49,7 @@ public class BankController {
                     processNewAccount();
                     break;
                 case 4:
-                    System.out.println("delete account");
+                    processDeleteAccount();
                     break;
                 case 5:
                     processMainMenuInput();
@@ -81,12 +80,13 @@ public class BankController {
     private void processDeposit() {
         BankAccount bankAccount = view.getTransaction();
 
-        List<BankAccount> accounts = fileHandler.getAccounts();
+        List<BankAccount> accounts = fileHandler.getAccountList();
 
         for (BankAccount account: accounts) {
             if ((account.getAccountNumber().equals(bankAccount.getAccountNumber()))) {
                 account.deposit(bankAccount.getBalance());
-                fileHandler.addAccount(account);
+                fileHandler.updateAccounts(accounts);
+                break;
             }
             else {
                 System.out.println("Account number doesn't exist");
@@ -97,12 +97,13 @@ public class BankController {
     private void processWithdrawal() {
         BankAccount bankAccount = view.getTransaction();
 
-        List<BankAccount> accounts = fileHandler.getAccounts();
+        List<BankAccount> accounts = fileHandler.getAccountList();
 
         for (BankAccount account: accounts) {
             if ((account.getAccountNumber().equals(bankAccount.getAccountNumber()))) {
                 account.withdraw(bankAccount.getBalance());
                 fileHandler.addAccount(account);
+                break;
             }
             else {
                 System.out.println("Account number doesn't exist");
@@ -111,12 +112,34 @@ public class BankController {
     }
 
     private void printAccounts() {
-        System.out.println(fileHandler.getAccounts());
+        System.out.println(fileHandler.getAccountList());
     }
 
     private void processNewAccount() {
         BankAccount bankAccount = view.getBankAccount();
 
         fileHandler.addAccount(bankAccount);
+    }
+
+    private void processDeleteAccount() {
+        String accountNumber = view.getAccountToDelete();
+        List<BankAccount> accounts = fileHandler.getAccountList();
+        BankAccount tempAccount = null;
+
+        for (BankAccount bankAccount: accounts) {
+            if (bankAccount.getAccountNumber().equals(accountNumber)) {
+                tempAccount = bankAccount;
+                break;
+            }
+            else {
+                System.out.println("No such account exists");
+            }
+        }
+
+        if (!(tempAccount == null)) {
+            System.out.println("deleted...");
+            accounts.remove(tempAccount);
+            fileHandler.updateAccounts(accounts);
+        }
     }
 }

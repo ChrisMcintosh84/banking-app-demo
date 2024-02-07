@@ -6,16 +6,22 @@ import com.google.gson.reflect.TypeToken;
 import models.BankAccount;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FileHandler {
     private final String accountsFilePath = "src/main/resources/accounts.json";
     private List<BankAccount> accountList = new ArrayList<>();
 
-    public List<BankAccount> getAccounts() {
+    public FileHandler() {
+        populateAccountList();
+    }
+
+    public List<BankAccount> getAccountList() {
+        return this.accountList;
+    }
+
+    public void populateAccountList() {
         try {
             accountList = readJson();
         }
@@ -23,12 +29,11 @@ public class FileHandler {
             e.printStackTrace();
         }
 
-        return accountList;
     }
 
     public void addAccount(BankAccount bankAccount) {
         try {
-            getAccounts();
+            populateAccountList();
             if (accountList == null) {
                 accountList = new ArrayList<>();
             }
@@ -36,6 +41,15 @@ public class FileHandler {
             accountList.add(bankAccount);
 
             writeBankAccountsToJson(accountList);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAccounts(List<BankAccount> accounts) {
+        try {
+            writeBankAccountsToJson(accounts);
         }
         catch (IOException e) {
             e.printStackTrace();
