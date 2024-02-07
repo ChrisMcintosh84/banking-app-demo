@@ -29,6 +29,8 @@ public class BankController {
                     break;
                 case 2:
                     System.exit(1);
+                default:
+                    System.out.println("Invalid choice, try again");
             }
         }
     }
@@ -54,6 +56,9 @@ public class BankController {
                 case 5:
                     processMainMenuInput();
                     break;
+                default:
+                    System.out.println("Invalid choice, try again");
+                    break;
             }
         }
     }
@@ -72,6 +77,9 @@ public class BankController {
                     break;
                 case 3:
                     processAccountMenuInput();
+                    break;
+                default:
+                    System.out.println("Invalid choice, try again");
                     break;
             }
         }
