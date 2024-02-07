@@ -1,39 +1,26 @@
 package views;
 
 import controllers.FileHandler;
-import models.User;
+import models.BankAccount;
 
 import java.util.Scanner;
 
 public class BankView {
 
-    private static FileHandler fileHandler = new FileHandler();
     private Scanner input = new Scanner(System.in);
 
     public int getMainMenuChoice() {
         System.out.println("Welcome to Bank App");
         System.out.println("==================================");
         System.out.println("Please choose from the following: ");
-        System.out.println("1) User selection");
+        System.out.println("1) Accounts");
         System.out.println("2) Exit");
 
         return input.nextInt();
     }
 
-    public int getUserMenuChoice() {
-        System.out.println("Welcome to Bank App");
-        System.out.println("==================================");
-        System.out.println("Please choose from the following: ");
-        System.out.println("1) Enter username");
-        System.out.println("2) Create new user");
-        System.out.println("3) List users");
-        System.out.println("4) Return to previous menu");
-
-        return input.nextInt();
-    }
-
     public int getAccountMenuChoice() {
-        System.out.println("Welcome to Bank App");
+        System.out.println("Account Menu");
         System.out.println("==================================");
         System.out.println("Please choose from the following: ");
         System.out.println("1) List accounts");
@@ -45,46 +32,46 @@ public class BankView {
         return input.nextInt();
     }
 
-    public User getUser() {
-        System.out.println("Enter id for user: ");
-        int id = input.nextInt();
+    public int getTransactionMenuChoice() {
+        System.out.println("Transaction Menu");
+        System.out.println("==================================");
+        System.out.println("Please choose from the following: ");
+        System.out.println("1) Deposit");
+        System.out.println("2) Withdraw");
+        System.out.println("3) Return to previous menu");
 
-        System.out.println("Enter name for user: ");
-        String name = input.next();
+        return input.nextInt();
+    }
 
-        System.out.println("Is this correct? Id: " + id + " models.User: " + name + " Y/N");
+    public BankAccount getBankAccount() {
+        System.out.println("Enter account number: ");
+        String accountNumber = input.next();
+
+        System.out.println("Enter current balance: ");
+        double currentBalance = input.nextDouble();
+
+        System.out.println("Is this correct? Account number: " + accountNumber + ", Current balance: " + currentBalance + " (Y/N)");
         String choice = input.next().toLowerCase();
 
-        User user = new User();
-        user.setUserId(id);
-        user.setUserName(name);
-
         if (choice.equals("y")) {
-            return user;
+            return new BankAccount(accountNumber, currentBalance);
         }
         return null;
     }
 
-//    private static void personalMenu() {
-//        while (true) {
-//            int userChoice = buildPersonalMenu();
-//
-//            switch (userChoice) {
-//                case 1:
-//                    listAccounts();
-//                    break;
-//                case 2:
-//                    makeTransaction();
-//                    break;
-//                case 3:
-//                    createAccount();
-//                    break;
-//                case 4:
-//                    deleteAccount();
-//                    break;
-//                case 5:
-//                    userMenu();
-//            }
-//        }
-//    }
+    public BankAccount getTransaction() {
+        System.out.println("Enter account number: ");
+        String accountNumber = input.next();
+
+        System.out.println("Enter amount: ");
+        double amount = input.nextDouble();
+
+        System.out.println("Is this correct? Account number: " + accountNumber + ", Amount: " + amount + " (Y/N)");
+        String choice = input.next().toLowerCase();
+
+        if (choice.equals("y")) {
+            return new BankAccount(accountNumber, amount);
+        }
+        return null;
+    }
 }

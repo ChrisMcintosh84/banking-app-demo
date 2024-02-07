@@ -1,16 +1,16 @@
 package controllers;
 
-import models.Transaction;
-import models.User;
+import models.BankAccount;
 import views.BankView;
 
+import java.util.List;
+import java.util.Objects;
+
 public class BankController {
-    private Transaction transaction;
     private BankView view;
     private FileHandler fileHandler;
 
-    public BankController(Transaction transaction, BankView view, FileHandler fileHandler) {
-        this.transaction = transaction;
+    public BankController(BankView view, FileHandler fileHandler) {
         this.view = view;
         this.fileHandler = fileHandler;
     }
@@ -26,32 +26,10 @@ public class BankController {
             choice = view.getMainMenuChoice();
             switch (choice) {
                 case 1:
-                    processUserMenuInput();
-                    break;
-                case 2:
-                    System.exit(1);
-            }
-        }
-    }
-
-    private void processUserMenuInput() {
-        int choice;
-
-        while (true) {
-            choice = view.getUserMenuChoice();
-            switch (choice) {
-                case 1:
                     processAccountMenuInput();
                     break;
                 case 2:
-                    processNewUser();
-                    break;
-                case 3:
-                    printUsers();
-                    break;
-                case 4:
-                    processMainMenuInput();
-                    break;
+                    System.exit(1);
             }
         }
     }
@@ -63,31 +41,82 @@ public class BankController {
             choice = view.getAccountMenuChoice();
             switch (choice) {
                 case 1:
-                    System.out.println("list accounts");
+                    printAccounts();
                     break;
                 case 2:
-                    System.out.println("make transaction");
+                    processTransactionMenuInput();
                     break;
                 case 3:
-                    System.out.println("create account");
+                    processNewAccount();
                     break;
                 case 4:
                     System.out.println("delete account");
                     break;
                 case 5:
-                    processUserMenuInput();
+                    processMainMenuInput();
                     break;
             }
         }
     }
 
-    private void printUsers() {
-        System.out.println(fileHandler.getUsernames());
+    private void processTransactionMenuInput() {
+        int choice;
+
+        while (true) {
+            choice = view.getTransactionMenuChoice();
+            switch (choice) {
+                case 1:
+                    processDeposit();
+                    break;
+                case 2:
+                    processWithdrawal();
+                    break;
+                case 3:
+                    processAccountMenuInput();
+                    break;
+            }
+        }
     }
 
-    private void processNewUser() {
-        User user = view.getUser();
+    private void processDeposit() {
+        BankAccount bankAccount = view.getTransaction();
 
-        fileHandler.addUser(user);
+        List<BankAccount> accounts = fileHandler.getAccounts();
+
+        for (BankAccount account: accounts) {
+            if ((account.getAccountNumber().equals(bankAccount.getAccountNumber()))) {
+                account.deposit(bankAccount.getBalance());
+                fileHandler.addAccount(account);
+            }
+            else {
+                System.out.println("Account number doesn't exist");
+            }
+        }
+    }
+
+    private void processWithdrawal() {
+        BankAccount bankAccount = view.getTransaction();
+
+        List<BankAccount> accounts = fileHandler.getAccounts();
+
+        for (BankAccount account: accounts) {
+            if ((account.getAccountNumber().equals(bankAccount.getAccountNumber()))) {
+                account.withdraw(bankAccount.getBalance());
+                fileHandler.addAccount(account);
+            }
+            else {
+                System.out.println("Account number doesn't exist");
+            }
+        }
+    }
+
+    private void printAccounts() {
+        System.out.println(fileHandler.getAccounts());
+    }
+
+    private void processNewAccount() {
+        BankAccount bankAccount = view.getBankAccount();
+
+        fileHandler.addAccount(bankAccount);
     }
 }

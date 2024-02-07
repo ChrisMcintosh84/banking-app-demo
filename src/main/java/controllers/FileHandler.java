@@ -2,69 +2,58 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import models.User;
+import com.google.gson.reflect.TypeToken;
+import models.BankAccount;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FileHandler {
-    private final String userFilePath = "src/main/resources/users.json";
-    private List<User> userList = new ArrayList<>();
+    private final String accountsFilePath = "src/main/resources/accounts.json";
+    private List<BankAccount> accountList = new ArrayList<>();
 
-    public List<User> getUsers() {
+    public List<BankAccount> getAccounts() {
         try {
-            userList = readJson();
+            accountList = readJson();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
 
-        return userList;
+        return accountList;
     }
 
-    public void addUser(User user) {
+    public void addAccount(BankAccount bankAccount) {
         try {
-            writeUserToJson(user);
+            getAccounts();
+            if (accountList == null) {
+                accountList = new ArrayList<>();
+            }
+
+            accountList.add(bankAccount);
+
+            writeBankAccountsToJson(accountList);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private List<User> readJson() throws FileNotFoundException {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(userFilePath));
+    private List<BankAccount> readJson() throws FileNotFoundException {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(accountsFilePath));
+        Gson gson = new Gson();
 
-        List<User> userList = new ArrayList<>();
-        User user = gson.fromJson(bufferedReader, User.class);
-        userList.add(user);
-        return userList;
+        return gson.fromJson(bufferedReader, new TypeToken<List<BankAccount>>(){}.getType());
     }
 
-    private void writeUserToJson(User user) throws IOException {
+    private void writeBankAccountsToJson(List<BankAccount> bankAccounts) throws IOException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-        FileWriter fileWriter = new FileWriter(userFilePath);
-        fileWriter.append(gson.toJson(user));
+        FileWriter fileWriter = new FileWriter(accountsFilePath);
+        fileWriter.append(gson.toJson(bankAccounts));
         fileWriter.close();
-    }
-
-    public List<String> getUsernames() {
-        List<String> usernames = new ArrayList<>();
-
-        try {
-            userList = readJson();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for (User user : userList) {
-            usernames.add(user.getUserName());
-        }
-
-        return usernames;
     }
 }
